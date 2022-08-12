@@ -1,6 +1,17 @@
-FROM python:3
+FROM python:3.9
 ENV PYTHONUNBUFFERED 1 
 RUN apt-get update && apt-get install -y git \
     && apk add --update-cache --no-cache \
-    && pip install django \
-    && apt-get install –y vim \
+    && apt-get install –y vim 
+# 作業ディレクトリの作成
+RUN mkdir /code
+
+# 作業ディレクトリの設定
+WORKDIR /code
+
+# カレントディレクトリにある資産をコンテナ上の指定のディレクトリにコピーする
+ADD . /code
+
+RUN pip3 install -r requirements.txt
+ADD . /code/
+EXPOSE 8000
