@@ -1,1 +1,3 @@
 # django_kakeibo
+このアプリでは、Dockerを用いてDjangoでの家計簿アプリの開発を行う
+DBはMySQLを用いる。
