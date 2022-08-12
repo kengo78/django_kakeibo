@@ -1,16 +1,16 @@
 version: ‘3’
 services:
-  kakeibo:
+  web:
     container_name: "django_kakeibo"
     build: .
     command: python3 manage.py runserver 0.0.0.0:8000
     working_dir: /code
-    ports:
-    - 8000:8000
     volumes:
-      — ".:/code"
+      - .:/code
+    ports:
+      - 8000:8000
     depends_on:
-      — db
+      - db
   db:
     container_name: "コンテナ名"
     image: mysql:5.7
