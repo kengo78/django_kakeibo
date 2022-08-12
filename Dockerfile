@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.7
 ENV PYTHONUNBUFFERED 1 
 # RUN apt-get update && apt-get install -y git \
 #     && apk add --update-cache --no-cache \

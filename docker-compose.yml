@@ -1,5 +1,24 @@
 version: '3'
 services:
+  db:
+    container_name: KakeiboDB
+    platform: linux/x86_64 #この行を追加。これないと"ERROR: no matching manifest for linux/arm64/v8 in the manifest list entries"
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: Kakeibo
+      # MYSQL_USER: ${MYSQL_ROOT_USER}
+      MYSQL_USER: user
+      MYSQL_ROOT_PASSWORD: u585304g
+      MYSQL_PASSWORD: pwd
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes" #これ追加
+      TZ: Asia/Tokyo
+      # MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      # MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
+      volumes:
+        — ./mysql:/var/lib/mysql
+      ports:
+        — 3306:3306
   web:
     container_name: "django_kakeibo"
     build: .
@@ -11,17 +30,5 @@ services:
       - 8000:8000
     depends_on:
       - db
-  db:
-    container_name: KakeiboDB
-    platform: linux/x86_64 #この行を追加。これないと"ERROR: no matching manifest for linux/arm64/v8 in the manifest list entries"
-    image: mysql:5.7
-    restart: always
-    environment:
-      MYSQL_DATABASE: Kakeibo
-      MYSQL_USER: ${MYSQL_ROOT_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
-      volumes:
-        — ./mysql:/var/lib/mysql
-      ports:
-        — 3306:3306
+    # extra_hosts:                  # 追加
+    #   - localhost:192.168.16.1   # 追加
