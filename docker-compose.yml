@@ -1,4 +1,4 @@
-version: ‘3’
+version: '3'
 services:
   web:
     container_name: "django_kakeibo"
@@ -12,14 +12,15 @@ services:
     depends_on:
       - db
   db:
-    container_name: "コンテナ名"
+    container_name: KakeiboDB
+    platform: linux/x86_64 #この行を追加。これないと"ERROR: no matching manifest for linux/arm64/v8 in the manifest list entries"
     image: mysql:5.7
     restart: always
     environment:
-      MYSQL_DATABASE: "データベース名"
-      MYSQL_USER: root
-      MYSQL_PASSWORD: password
-      MYSQL_ALLOW_EMPTY_PASSWORD: ‘yes’
+      MYSQL_DATABASE: Kakeibo
+      MYSQL_USER: ${MYSQL_ROOT_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
       volumes:
         — ./mysql:/var/lib/mysql
       ports:

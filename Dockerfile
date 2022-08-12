@@ -1,8 +1,8 @@
 FROM python:3.9
 ENV PYTHONUNBUFFERED 1 
-RUN apt-get update && apt-get install -y git \
-    && apk add --update-cache --no-cache \
-    && apt-get install –y vim 
+# RUN apt-get update && apt-get install -y git \
+#     && apk add --update-cache --no-cache \
+#     && apt-get install –y vim 
 # 作業ディレクトリの作成
 RUN mkdir /code
 
