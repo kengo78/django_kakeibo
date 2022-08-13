@@ -8,6 +8,7 @@ services:
     environment:
       MYSQL_DATABASE: Kakeibo
       # MYSQL_USER: ${MYSQL_ROOT_USER}
+      MYSQL_ROOT_USER: root
       MYSQL_USER: user
       MYSQL_ROOT_PASSWORD: u585304g
       MYSQL_PASSWORD: pwd
@@ -15,14 +16,28 @@ services:
       TZ: Asia/Tokyo
       # MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       # MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
+      
       volumes:
         — ./mysql:/var/lib/mysql
       ports:
         — 3306:3306
+    # command: mysqld --innodb_use_native_aio=
+    expose:
+      - "3306"
+  
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   ports:
+  #     - 8080:80
+  #   environment:
+  #     - PMA_HOST=db
+  #     - PMA_USER=root
+  #     - PMA_PASSWORD=password
   web:
     container_name: "django_kakeibo"
+    platform: linux/amd64
     build: .
-    command: python3 manage.py runserver 0.0.0.0:8000
+    command: python3 manage.py runserver 0:8000
     working_dir: /code
     volumes:
       - .:/code
@@ -31,4 +46,4 @@ services:
     depends_on:
       - db
     # extra_hosts:                  # 追加
-    #   - localhost:192.168.16.1   # 追加
+    #   - localhost:172.21.0.3   # 追加
