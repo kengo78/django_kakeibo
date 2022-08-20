@@ -5,8 +5,6 @@ import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-print(BASE_DIR)
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -18,7 +16,7 @@ env.read_env('.env')
 
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG')
-ALLOWED_HOSTS = ["127.0.0.0:8000", "0.0.0.0",'localhost']
+ALLOWED_HOSTS = ["127.0.0.0:8000", "0.0.0.0",'localhost',"127.0.0.0:8000"]
 # Application definition
 
 INSTALLED_APPS = [
@@ -28,7 +26,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users.apps.UsersConfig',
 ]
+AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
