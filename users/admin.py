@@ -3,6 +3,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.utils.translation import gettext_lazy as _
 from .models import User
+from django.contrib.auth.models import Group
+# from .forms import UserChangeForm, UserCreationForm
 
 class MyUserChangeForm(UserChangeForm):
     class Meta:
@@ -35,3 +37,4 @@ class MyUserAdmin(UserAdmin):
     ordering = ('email',)
 
 admin.site.register(User, MyUserAdmin)
+admin.site.unregister(Group)
