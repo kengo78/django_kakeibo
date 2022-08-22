@@ -4,7 +4,7 @@ services:
     container_name: KakeiboDB
     platform: linux/x86_64 #この行を追加。これないと"ERROR: no matching manifest for linux/arm64/v8 in the manifest list entries"
     image: mysql:5.7
-    command: --default-authentication-plugin=mysql_native_password
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     restart: always
     environment:
       MYSQL_DATABASE: Kakeibo
@@ -19,6 +19,7 @@ services:
       # MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
       volumes:
         — ./mysql:/var/lib/mysql
+        - ./mysql/conf.d:/etc/mysql/conf.d
       ports:
         — 3306:3306
     # command: mysql -u $MYSQL_ROOT_USER -p $MYSQL_ROOT_PASSWORD

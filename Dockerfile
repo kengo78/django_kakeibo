@@ -1,5 +1,6 @@
 FROM python:3.7
 # RUN apt-get update && apt-get install -y git \
+ENV PYTHONUNBUFFERED 1
 #     && apk add --update-cache --no-cache \
 #     && apt-get install –y vim 
 # 作業ディレクトリの作成
