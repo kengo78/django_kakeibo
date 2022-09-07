@@ -1,6 +1,7 @@
 from django import forms
 from .models import PaymentCategory
 from django.utils import timezone
+from .widgets import CustomRadioSelect 
 
 
 class PaymentSearchForm(forms.Form):
@@ -68,4 +69,15 @@ class PaymentSearchForm(forms.Form):
         required=False,
         queryset=PaymentCategory.objects.order_by('name'),
         widget=forms.Select(attrs={'class': 'form'})
+    )
+    
+class PaymentSearchForm(forms.Form):
+    """支出検索フォーム"""
+    ...
+    # カテゴリー検索
+    category = forms.ModelChoiceField(
+        label='カテゴリでの絞り込み',
+        required=False,
+        queryset=PaymentCategory.objects.order_by('name'),
+        widget=CustomRadioSelect # 変更
     )
