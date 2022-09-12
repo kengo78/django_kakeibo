@@ -4,8 +4,13 @@ from .models import Payment, PaymentCategory, Income, IncomeCategory
 from django.urls import reverse_lazy
 
 from .forms import PaymentSearchForm, IncomeSearchForm,PaymentCreateForm, IncomeCreateForm 
-from django.contrib import messages  # 追加
-from django.shortcuts import redirect  # 追加
+from django.contrib import messages 
+from django.shortcuts import redirect 
+
+import numpy as np
+import pandas as pd
+from django_pandas.io import read_frame
+from .plugin_plotly import GraphGenerator
 
 
 class PaymentList(generic.ListView):
@@ -233,3 +238,50 @@ class IncomeDelete(generic.DeleteView):
                       f'カテゴリ:{income.category}\n'
                       f'金額:{income.price}円')
         return redirect(self.get_success_url())
+    
+class MonthDashboard(generic.TemplateView):
+    """月間支出ダッシュボード"""
+    template_name = 'kakeibo/month_dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ...
+        context['next_month'] = next_month
+        
+        # ここから追加
+        # paymentモデルをdfにする
+        queryset = Payment.objects.filter(date__year=year)
+        queryset = queryset.filter(date__month=month)
+        # クエリセットが何もない時はcontextを返す
+        # 後の工程でエラーになるため
+        if not queryset:
+            return context
+        #データフレーム化
+        df = read_frame(queryset,
+                        fieldnames=['date', 'price', 'category'])
+
+        # グラフ作成クラスをインスタンス化
+        gen = GraphGenerator()
+
+        # pieチャートの素材を作成
+        df_pie = pd.pivot_table(df, index='category', values='price', aggfunc=np.sum)
+        pie_labels = list(df_pie.index.values)
+        pie_values = [val[0] for val in df_pie.values]
+        plot_pie = gen.month_pie(labels=pie_labels, values=pie_values)
+        context['plot_pie'] = plot_pie
+
+        # テーブルでのカテゴリと金額の表示用。
+        # {カテゴリ:金額,カテゴリ:金額…}の辞書を作る
+        context['table_set'] = df_pie.to_dict()['price']
+
+        # totalの数字を計算して渡す
+        context['total_payment'] = df['price'].sum()
+
+        # 日別の棒グラフの素材を渡す
+        df_bar = pd.pivot_table(df, index='date', values='price', aggfunc=np.sum)
+        dates = list(df_bar.index.values)
+        heights = [val[0] for val in df_bar.values]
+        plot_bar = gen.month_daily_bar(x_list=dates, y_list=heights)
+        context['plot_bar'] = plot_bar
+
+        return context
