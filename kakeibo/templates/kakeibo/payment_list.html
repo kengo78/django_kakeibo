@@ -36,3 +36,28 @@
 
 
 {% endblock %}
+
+<!-- javascript -->
+{% block extrajs %}
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', e => {
+    const searchForm = document.getElementById('search-form');
+
+    //カテゴリがクリックされたら検索実行
+    for (const check of document.getElementsByName('category')) {
+      check.addEventListener('change', () => {
+        searchForm.submit();
+      });
+    }
+
+    // 選択済みのカテゴリがクリックされたらチェックを解除して検索実行
+    const selectedCategory = document.querySelector(`input[name='category']:checked`)
+    if (selectedCategory) {
+      selectedCategory.onclick = () => {
+        selectedCategory.checked = false
+        searchForm.submit();
+      }
+    }
+  });
+</script>
+{% endblock %}

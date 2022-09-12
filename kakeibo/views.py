@@ -12,6 +12,7 @@ class PaymentList(generic.ListView):
     template_name = 'kakeibo/payment_list.html'
     model = Payment
     ordering = '-date'
+    paginate_by = 5
 
     # 追加
     def get_queryset(self):
