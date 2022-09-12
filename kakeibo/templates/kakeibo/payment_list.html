@@ -1,5 +1,6 @@
 <!-- kakeibo/templates/kakeibo/payment_list.html -->
 {% extends 'kakeibo/base.html' %}
+{% load kakeibo %}
 {% block content %}
 
 <!-- 検索フォーム -->
@@ -24,6 +25,9 @@
   </div>
 </form>
 
+<!-- 追加　表示件数 -->
+<p class="search-result mt-3"> {{ page_obj.paginator.count }}件の検索結果 </p>
+
 <!-- 一覧表示 -->
 <table class="table mt-3">
   ...
@@ -31,7 +35,18 @@
 
 <!-- ページネーション -->
 <div class="mt-5">
-  <h1>ページネーション！</h1>
+  <!-- 1つ前 -->
+  {% if page_obj.has_previous %}
+  <a class="mr-2 prev" href="?{% url_replace request 'page' page_obj.previous_page_number %}" title="前ページへ">前へ</a>
+  {% endif %}
+
+  <!-- nページ目/トータルページ数 -->
+  <span style="color:#0d1a3c">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+
+  <!-- 1つ後 -->
+  {% if page_obj.has_next %}
+  <a class="ml-2 next" href="?{% url_replace request 'page' page_obj.next_page_number %}" title="次ページへ">次へ</a>
+  {% endif %}
 </div>
 
 

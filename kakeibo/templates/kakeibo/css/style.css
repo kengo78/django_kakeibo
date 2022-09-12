@@ -338,3 +338,11 @@ a.header-title {
 .custom-radio-label:hover {
   opacity: 0.5;
 }
+
+.search-result {
+  color: #39c0ed;
+}
+
+.prev, .next {
+  font-weight: bold;
+}
