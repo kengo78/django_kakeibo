@@ -13,4 +13,5 @@ urlpatterns = [
     path('payment_delete/<int:pk>/', views.PaymentDelete.as_view(), name='payment_delete'),
     path('income_delete/<int:pk>/', views.IncomeDelete.as_view(), name='income_delete'),
     path('month_dashboard/<int:year>/<int:month>/', views.MonthDashboard.as_view(), name='month_dashboard'),
+    path('transition/', views.TransitionView.as_view(), name='transition'),
 ]

@@ -2,9 +2,7 @@
 
 @charset "UTF-8";
 
-/* --------------------------------
- * base
- * -------------------------------- */
+
 html {
   font-size: 62.5%;
 }
@@ -76,9 +74,6 @@ main {
   }
 }
 
-/* --------------------------------
- * ヘッダー
- * -------------------------------- */
 .page-header {
   padding: 30px 4% 10px;
   position: fixed;
@@ -116,9 +111,7 @@ a.header-title {
   opacity: 0.6;
 }
 
-/* --------------------------------
- *　ユーティリティ
- * -------------------------------- */
+
 .mt-0 {
   margin-top: 0 !important;
 }
@@ -215,9 +208,7 @@ a.header-title {
   margin-right: 3rem !important;
 }
 
-/* --------------------------------
- * テーブル
- * -------------------------------- */
+
 .table {
   border-collapse: collapse;
   border-spacing: 0;
@@ -238,9 +229,7 @@ a.header-title {
   width: 20%;
   padding: 15px 0;
 }
-/* --------------------------------
- * フォーム
- * -------------------------------- */
+
 .form {
   font-size: 1.4rem;
   padding: 3px 6px;
@@ -256,9 +245,7 @@ a.header-title {
   box-shadow: 0 0 0 .25rem rgba(18, 102, 241, .25);
 }
 
-/* --------------------------------
- * ボタン
- * -------------------------------- */
+
 .btn, a.btn {
   font-size: 1.4rem;
   color: #333;
@@ -388,12 +375,6 @@ a.header-title {
   color: #fff;
 }
 
-...
-
-/* --------------------------------
- * 一覧ページのボタン部分
- * -------------------------------- */
-/* 通常は横並び */
 .manage-btn-area {
   display: flex;
   flex-direction: row;
@@ -439,9 +420,7 @@ a.header-title {
   padding: 0 5%;
 }
 
-/* --------------------------------
- * カード
- * -------------------------------- */
+
 .card {
   margin-top: 2rem;
   position: relative;
@@ -455,4 +434,12 @@ a.header-title {
   border-radius: 0.3rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
   padding: 10px;
+}
+.hidden_toolbar .modebar {
+  display: none !important;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  color: #888;
 }

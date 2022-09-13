@@ -3,7 +3,7 @@ from django.views import generic
 from .models import Payment, PaymentCategory, Income, IncomeCategory
 from django.urls import reverse_lazy
 
-from .forms import PaymentSearchForm, IncomeSearchForm,PaymentCreateForm, IncomeCreateForm 
+from .forms import PaymentSearchForm, IncomeSearchForm, PaymentCreateForm, IncomeCreateForm, TransitionGraphSearchForm 
 from django.contrib import messages 
 from django.shortcuts import redirect 
 
@@ -283,5 +283,107 @@ class MonthDashboard(generic.TemplateView):
         heights = [val[0] for val in df_bar.values]
         plot_bar = gen.month_daily_bar(x_list=dates, y_list=heights)
         context['plot_bar'] = plot_bar
+
+        return context
+    
+def transition_plot(self,
+                        x_list_payment=None,
+                        y_list_payment=None,
+                        x_list_income=None,
+                        y_list_income=None):
+        """推移ページの複合グラフ"""
+        fig = go.Figure()
+        
+        # 支出はラインプロット
+        if x_list_payment and y_list_payment:
+            fig.add_trace(go.Scatter(
+                x=x_list_payment,
+                y=y_list_payment,
+                mode='lines',
+                name='payment',
+                opacity=0.5,
+                line=dict(color=self.payment_color,
+                          width=5, )
+            ))
+
+        # 収入はバープロット
+        if x_list_income and y_list_income:
+            fig.add_trace(go.Bar(
+                x=x_list_income, y=y_list_income,
+                name='income',
+                marker_color=self.income_color,
+                opacity=0.5,
+            ))
+
+        fig.update_layout(
+            paper_bgcolor=self.paper_bg_color,
+            plot_bgcolor=self.plot_bg_color,
+            font=dict(size=14, color=self.font_color),
+            margin=dict(
+                autoexpand=True,
+                l=0, r=0, b=20, t=30, ),
+            yaxis=dict(
+                showgrid=False,
+                linewidth=1,
+                rangemode='tozero'))
+        fig.update_yaxes(visible=False, fixedrange=True)
+        fig.update_yaxes(automargin=True)
+        return fig.to_html(include_plotlyjs=False)
+    
+class TransitionView(generic.TemplateView):
+    """月毎の収支推移"""
+    template_name = 'kakeibo/transition.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        payment_queryset = Payment.objects.all()
+        income_queryset = Income.objects.all()
+        self.form = form = TransitionGraphSearchForm(self.request.GET or None)
+        context['search_form'] = self.form
+
+        graph_visible = None
+        # plotlyに渡すデータ
+        months_payment = None
+        payments = None
+        months_income = None
+        incomes = None
+
+        if form.is_valid():
+            # カテゴリーで絞り込む
+            payment_category = form.cleaned_data.get('payment_category')
+            if payment_category:
+                payment_queryset = payment_queryset.filter(category=payment_category)
+            income_category = form.cleaned_data.get('income_category')
+            if income_category:
+                income_queryset = income_queryset.filter(category=income_category)
+
+            # 表示するをグラフ
+            graph_visible = form.cleaned_data.get('graph_visible')
+
+        # グラフ表示指定がない、もしくは支出グラフ表示が選択
+        if not graph_visible or graph_visible == 'Payment':
+            payment_df = read_frame(payment_queryset,
+                                    fieldnames=['date', 'price'])
+            payment_df['date'] = pd.to_datetime(payment_df['date'])
+            payment_df['month'] = payment_df['date'].dt.strftime('%Y-%m')
+            payment_df = pd.pivot_table(payment_df, index='month', values='price', aggfunc=np.sum)
+            months_payment = list(payment_df.index.values)
+            payments = [y[0] for y in payment_df.values]
+
+        # グラフ表示指定がない、もしくは収入グラフ表示が選択
+        if not graph_visible or graph_visible == 'Income':
+            income_df = read_frame(income_queryset,
+                                   fieldnames=['date', 'price'])
+            income_df['date'] = pd.to_datetime(income_df['date'])
+            income_df['month'] = income_df['date'].dt.strftime('%Y-%m')
+            income_df = pd.pivot_table(income_df, index='month', values='price', aggfunc=np.sum)
+            months_income = list(income_df.index.values)
+            incomes = [y[0] for y in income_df.values]
+
+        gen = GraphGenerator()
+        context['transition_plot'] = gen.transition_plot(x_list_payment=months_payment,
+                                                   y_list_payment=payments,
+                                                   x_list_income=months_income,
+                                                   y_list_income=incomes)
 
         return context
