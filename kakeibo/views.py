@@ -1,6 +1,7 @@
 #kakeibo/views.py
 from django.views import generic
-from .models import Payment, PaymentCategory, Income, IncomeCategory
+# from .models import Payment, PaymentCategory, Income, IncomeCategory
+from .models import Payment, Income, IncomeCategory, PaymentCategory
 from django.urls import reverse_lazy
 
 from .forms import PaymentSearchForm, IncomeSearchForm, PaymentCreateForm, IncomeCreateForm, TransitionGraphSearchForm 
@@ -286,49 +287,7 @@ class MonthDashboard(generic.TemplateView):
 
         return context
     
-def transition_plot(self,
-                        x_list_payment=None,
-                        y_list_payment=None,
-                        x_list_income=None,
-                        y_list_income=None):
-        """推移ページの複合グラフ"""
-        fig = go.Figure()
-        
-        # 支出はラインプロット
-        if x_list_payment and y_list_payment:
-            fig.add_trace(go.Scatter(
-                x=x_list_payment,
-                y=y_list_payment,
-                mode='lines',
-                name='payment',
-                opacity=0.5,
-                line=dict(color=self.payment_color,
-                          width=5, )
-            ))
 
-        # 収入はバープロット
-        if x_list_income and y_list_income:
-            fig.add_trace(go.Bar(
-                x=x_list_income, y=y_list_income,
-                name='income',
-                marker_color=self.income_color,
-                opacity=0.5,
-            ))
-
-        fig.update_layout(
-            paper_bgcolor=self.paper_bg_color,
-            plot_bgcolor=self.plot_bg_color,
-            font=dict(size=14, color=self.font_color),
-            margin=dict(
-                autoexpand=True,
-                l=0, r=0, b=20, t=30, ),
-            yaxis=dict(
-                showgrid=False,
-                linewidth=1,
-                rangemode='tozero'))
-        fig.update_yaxes(visible=False, fixedrange=True)
-        fig.update_yaxes(automargin=True)
-        return fig.to_html(include_plotlyjs=False)
     
 class TransitionView(generic.TemplateView):
     """月毎の収支推移"""
@@ -380,6 +339,7 @@ class TransitionView(generic.TemplateView):
             months_income = list(income_df.index.values)
             incomes = [y[0] for y in income_df.values]
 
+        #グラフ生成
         gen = GraphGenerator()
         context['transition_plot'] = gen.transition_plot(x_list_payment=months_payment,
                                                    y_list_payment=payments,

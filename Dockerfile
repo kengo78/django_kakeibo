@@ -13,6 +13,8 @@ WORKDIR /code
 # カレントディレクトリにある資産をコンテナ上の指定のディレクトリにコピーする
 ADD . /code
 
+RUN pip3 install django
+
 RUN pip3 install -r requirements.txt
 ADD . /code/
 EXPOSE 8000

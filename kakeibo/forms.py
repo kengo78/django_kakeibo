@@ -1,5 +1,5 @@
 from django import forms
-from .models import PaymentCategory,Payment, Income
+from .models import PaymentCategory,Payment, Income, IncomeCategory
 from django.utils import timezone
 from .widgets import CustomRadioSelect
 
