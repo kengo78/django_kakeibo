@@ -4,7 +4,7 @@ from django.views import generic
 from .models import Payment, Income,IncomeCategory, PaymentCategory,Rest
 from django.urls import reverse_lazy
 
-from .forms import PaymentSearchForm, IncomeSearchForm, PaymentCreateForm, IncomeCreateForm, TransitionGraphSearchForm 
+from .forms import PaymentSearchForm, IncomeSearchForm, PaymentCreateForm, IncomeCreateForm, TransitionGraphSearchForm, RestCreateForm 
 from django.contrib import messages 
 from django.shortcuts import redirect 
 
@@ -140,6 +140,29 @@ class IncomeCreate(generic.CreateView):
                       f'日付:{income.date}\n'
                       f'カテゴリ:{income.category}\n'
                       f'金額:{income.price}円')
+        return redirect(self.get_success_url())
+    
+class RestCreate(generic.CreateView):
+    """残高登録"""
+    template_name = 'kakeibo/register.html'
+    model = Rest
+    form_class = RestCreateForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = '残高登録'
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('kakeibo:rest_list')
+    
+    def form_valid(self, form):
+        self.object = rest = form.save()
+        messages.info(self.request,
+                      f'残高を登録しました\n'
+                      f'日付:{rest.date}\n'
+                      f'カテゴリ:{rest.category}\n'
+                      f'金額:{rest.price}円')
         return redirect(self.get_success_url())
     
 class PaymentUpdate(generic.UpdateView):

@@ -1,5 +1,5 @@
 from django import forms
-from .models import PaymentCategory,Payment, Income, IncomeCategory
+from .models import PaymentCategory,Payment, Income, IncomeCategory, Rest
 from django.utils import timezone
 from .widgets import CustomRadioSelect
 
@@ -126,6 +126,20 @@ class IncomeCreateForm(forms.ModelForm):
 
     class Meta:
         model = Income
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form'
+            field.widget.attrs['placeholder'] = field.label
+            field.widget.attrs['autocomplete'] = 'off'
+            
+class RestCreateForm(forms.ModelForm):
+    """収入登録フォーム"""
+
+    class Meta:
+        model = Rest
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):

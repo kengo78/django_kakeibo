@@ -37,4 +37,3 @@ class Rest(models.Model):
     date = models.DateField('日付',default=timezone.now)
     rest = models.IntegerField('金額')
     category = models.ForeignKey(BankCategory, on_delete=models.PROTECT,verbose_name='銀行')
-    
