@@ -18,8 +18,9 @@ services:
       # MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       # MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
       volumes:
-        — ./mysql:/var/lib/mysql
+        — KakeiboDB.volume:/var/lib/mysql
         — ./mysql/conf.d:/etc/mysql/conf.d
+        - ./sql:/initdb.d
       ports:
         — 3306:3306
     # command: mysql -u $MYSQL_ROOT_USER -p $MYSQL_ROOT_PASSWORD

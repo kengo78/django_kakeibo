@@ -161,3 +161,17 @@ class TransitionGraphSearchForm(forms.Form):
                                       choices=SHOW_CHOICES,
                                       widget=CustomRadioSelect
                                       )
+    
+# class RestCreateForm(forms.ModelForm):
+#     """支出登録フォーム"""
+
+#     class Meta:
+#         model = Rest
+#         fields = '__all__'
+
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         for field in self.fields.values():
+#             field.widget.attrs['class'] = 'form'
+#             field.widget.attrs['placeholder'] = field.label
+#             field.widget.attrs['autocomplete'] = 'off'
