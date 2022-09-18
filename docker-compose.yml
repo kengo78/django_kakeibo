@@ -1,6 +1,4 @@
 version: '3'
-volumes:
-  KakeiboDB.volume:
 services:
   db:
     container_name: KakeiboDB
@@ -20,9 +18,9 @@ services:
       # MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       # MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
       volumes:
-        — KakeiboDB.volume:/var/lib/mysql
+        — kakeibodb_volume:/var/lib/mysql/data
         — ./mysql/conf.d:/etc/mysql/conf.d
-        - ./sql:/initdb.d
+        — ./mysql:/initdb.d
       ports:
         — 3306:3306
     # command: mysql -u $MYSQL_ROOT_USER -p $MYSQL_ROOT_PASSWORD
@@ -52,3 +50,5 @@ services:
       - db
     # extra_hosts:                  # 追加
     #   - localhost:172.21.0.3   # 追加
+volumes:
+  kakeibodb_volume:
