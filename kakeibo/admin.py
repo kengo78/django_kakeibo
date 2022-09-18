@@ -52,9 +52,10 @@ class RestResource(resources.ModelResource):
     class Meta:
         model = Rest
         
-class RestAdmin(resources.ModelResource):
+class RestAdmin(ImportExportModelAdmin):
+    search_fields = ('category',)
     list_display = ['date', 'rest','category']
-    list_filter = ('category')
+    list_filter = ('category',)
     ordering = ('-date',)
 
     resource_class = RestResource
@@ -72,5 +73,5 @@ admin.site.register(PaymentCategory, PaymentCategoryAdmin)
 admin.site.register(IncomeCategory, IncomeCategoryAdmin)
 admin.site.register(Payment, PaymentAdmin)
 admin.site.register(Income, IncomeAdmin)
-# admin.site.register(Rest, RestAdmin)
+admin.site.register(Rest, RestAdmin)
 # admin.site.register(BankCategory, BankCategoryAdmin)

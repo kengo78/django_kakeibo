@@ -95,6 +95,33 @@ class IncomeList(generic.ListView):
 
         return context
     
+class RestList(generic.ListView):
+    template_name = 'kakeibo/rest_list.html'
+    model = Rest
+    ordering = '-date'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.form = form = IncomeSearchForm(self.request.GET or None)
+
+        if form.is_valid():
+            year = form.cleaned_data.get('year')
+            if year and year != '0':
+                queryset = queryset.filter(date__year=year)
+
+            month = form.cleaned_data.get('month')
+            if month and month != '0':
+                queryset = queryset.filter(date__month=month)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = self.form
+
+        return context
+    
 class PaymentCreate(generic.CreateView):
     """支出登録"""
     template_name = 'kakeibo/register.html'
@@ -162,7 +189,7 @@ class RestCreate(generic.CreateView):
                       f'残高を登録しました\n'
                       f'日付:{rest.date}\n'
                       f'カテゴリ:{rest.category}\n'
-                      f'金額:{rest.price}円')
+                      f'金額:{rest.rest}円')
         return redirect(self.get_success_url())
     
 class PaymentUpdate(generic.UpdateView):
@@ -210,6 +237,29 @@ class IncomeUpdate(generic.UpdateView):
                       f'日付:{income.date}\n'
                       f'カテゴリ:{income.category}\n'
                       f'金額:{income.price}円')
+        return redirect(self.get_success_url())
+    
+class RestUpdate(generic.UpdateView):
+    """収入更新"""
+    template_name = 'kakeibo/register.html'
+    model = Rest
+    form_class = RestCreateForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = '残高更新'
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('kakeibo:rest_list')
+
+    def form_valid(self, form):
+        self.object = rest = form.save()
+        messages.info(self.request,
+                      f'収入を更新しました\n'
+                      f'日付:{rest.date}\n'
+                      f'カテゴリ:{rest.category}\n'
+                      f'金額:{rest.rest}円')
         return redirect(self.get_success_url())
 
 
