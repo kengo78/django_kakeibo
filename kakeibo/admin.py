@@ -10,7 +10,8 @@ class PaymentResource(resources.ModelResource):
 
 class PaymentAdmin(ImportExportModelAdmin):
     search_fields = ('description',)
-    list_display = ['date', 'category', 'price', 'description']
+    # list_display = ['date', 'category', 'price', 'cardcategory','description']
+    list_display = ['date', 'category', 'price','description']
     list_filter = ('category',)
     ordering = ('-date',)
 
