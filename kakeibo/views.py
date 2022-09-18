@@ -1,18 +1,62 @@
 #kakeibo/views.py
+from pipes import Template
 from django.views import generic
-# from .models import Payment, PaymentCategory, Income, IncomeCategory
 from .models import Payment, Income,IncomeCategory, PaymentCategory,Rest
 from django.urls import reverse_lazy
 
 from .forms import PaymentSearchForm, IncomeSearchForm, PaymentCreateForm, IncomeCreateForm, TransitionGraphSearchForm, RestCreateForm 
 from django.contrib import messages 
 from django.shortcuts import redirect 
+from django.utils import timezone
 
 import numpy as np
 import pandas as pd
 from django_pandas.io import read_frame
 from .plugin_plotly import GraphGenerator
 
+
+class Index(generic.TemplateView):
+    
+    template_name = 'kakeibo/index.html'
+    # model = Budget
+    
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        TODAY = str(timezone.now()).split('-')
+        year = TODAY[0]
+        month = TODAY[1]
+        next_year, next_month = get_next(year, month)
+        prev_year, prev_month = get_prev(year, month)
+        objects = Payment.objects.filter(
+            date__year = year, date__month = month
+        ).order_by("date")
+        total = 0
+        for object in objects:
+            total += object.price
+        
+        objects = Payment.objects.filter(
+            date__year = year, date__month = prev_month
+        ).order_by("date")
+        total_payment = 0
+        #クレカなので先月の利用額
+        for object in objects:
+            total_payment += object.price
+        
+        
+        context = {
+            "year": year,
+            'month': month,
+            "total":total,
+            "total_payment":total_payment,
+            "next_year": next_year,
+            "next_month": next_month,
+            "prev_year": prev_year,
+            "prev_month": prev_month,
+        }
+        # if not queryset:
+        #     return context
+        return context
 
 class PaymentList(generic.ListView):
     template_name = 'kakeibo/payment_list.html'
@@ -441,3 +485,21 @@ class TransitionView(generic.TemplateView):
                                                    y_list_income=incomes)
 
         return context
+    
+def get_next(year, month):
+    year = int(year)
+    month = int(month)
+
+    if month==12:
+        return str(year + 1), "1"
+    else:
+        return str(year), str(month+1)
+
+def get_prev(year, month):
+    year = int(year)
+    month = int(month)
+    
+    if month == 1:
+        return str(year-1), "12"
+    else:
+        return str(year), str(month-1)
