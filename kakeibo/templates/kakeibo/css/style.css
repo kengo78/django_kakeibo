@@ -61,6 +61,8 @@ main {
   position: relative;
 }
 
+
+
 @media (min-width: 768px) {
   .container {
     margin: 0 40px;
@@ -111,6 +113,9 @@ a.header-title {
   opacity: 0.6;
 }
 
+.pulldownmenu {
+  margin: 0 0 0 auto;
+}
 
 .mt-0 {
   margin-top: 0 !important;

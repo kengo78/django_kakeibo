@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Payment, Income, PaymentCategory, IncomeCategory, Rest, BankCategory
+from .models import Payment, Income, PaymentCategory, IncomeCategory, Rest, BankCategory, PaymentCardCategory
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
@@ -25,6 +25,14 @@ class PaymentCategoryResource(resources.ModelResource):
 
 class PaymentCategoryAdmin(ImportExportModelAdmin):
     resource_class = PaymentCategoryResource
+    
+class PaymentCardCategoryResource(resources.ModelResource):
+    class Meta:
+        model = PaymentCardCategory
+
+
+class PaymentCardCategoryAdmin(ImportExportModelAdmin):
+    resource_class = PaymentCardCategoryResource
 
 
 class IncomeResource(resources.ModelResource):
@@ -71,6 +79,7 @@ class BankCategoryAdmin(ImportExportModelAdmin):
 
 
 admin.site.register(PaymentCategory, PaymentCategoryAdmin)
+admin.site.register(PaymentCardCategory, PaymentCardCategoryAdmin)
 admin.site.register(IncomeCategory, IncomeCategoryAdmin)
 admin.site.register(Payment, PaymentAdmin)
 admin.site.register(Income, IncomeAdmin)

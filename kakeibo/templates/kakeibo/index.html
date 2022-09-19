@@ -1,24 +1,11 @@
-{% comment %} {% extends 'kakeibo/base.html' %} {% endcomment %}
+{% extends 'kakeibo/base.html' %}
+
 {% block content %}
-<div>
-    <div>
-        <a href="{% url 'kakeibo:payment_create' %}">支出登録</a>
-    </div>
-</div>
-<div>
-    <div>
-        <a href="{% url 'kakeibo:income_create' %}">収入登録</a>
-    </div>
-</div>
-<div>
-    <div>
-        <a href="{% url 'kakeibo:rest_create' %}">残高登録</a>
-    </div>
-</div>
+
 
 <div class="card" style="width: 18rem;">
     <div class="card-body">
-      <h5 class="card-title">今月の合計使用金額</h5>
+      <h5 class="card-title">今月の支払い</h5>
       <p class="card-text">{{ total }}円</p>
     </div>
 </div>
@@ -35,14 +22,4 @@
     </div>
 </div>
 
-<div>
-    <div>
-        <a href="{% url 'kakeibo:payment_list' %}">支出一覧</a>
-    </div>
-</div>
-<div>
-    <div>
-        <a href="{% url 'kakeibo:income_list' %}">収入一覧</a>
-    </div>
-</div>
 {% endblock %}
