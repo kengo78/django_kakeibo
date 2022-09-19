@@ -21,10 +21,10 @@
       <p class="card-text">{{ rest }}円</p>
     </div>
 </div>
-<div>
+{% comment %} <div>
     {% for payment in payments %}
         <p>{{ payment.cardcategory }}</p>
     {% endfor %}
-</div>
+</div> {% endcomment %}
 
 {% endblock %}
