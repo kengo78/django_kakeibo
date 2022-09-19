@@ -448,8 +448,11 @@ class TransitionView(generic.TemplateView):
         if form.is_valid():
             # カテゴリーで絞り込む
             payment_category = form.cleaned_data.get('payment_category')
+            payment_cardcategory = form.cleaned_data.get('payment_cardcategory')
             if payment_category:
                 payment_queryset = payment_queryset.filter(category=payment_category)
+            if payment_cardcategory:
+                payment_cardqueryset = payment_queryset.fileter(cardcategory=payment_cardcategory)
             income_category = form.cleaned_data.get('income_category')
             if income_category:
                 income_queryset = income_queryset.filter(category=income_category)
@@ -466,6 +469,10 @@ class TransitionView(generic.TemplateView):
             payment_df = pd.pivot_table(payment_df, index='month', values='price', aggfunc=np.sum)
             months_payment = list(payment_df.index.values)
             payments = [y[0] for y in payment_df.values]
+            
+            #カード毎のdf
+            # payment_carddf = read_frame(payment_cardqueryset, 
+            #                             filednames=['date', 'price'])
 
         # グラフ表示指定がない、もしくは収入グラフ表示が選択
         if not graph_visible or graph_visible == 'Income':

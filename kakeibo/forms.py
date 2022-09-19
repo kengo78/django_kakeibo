@@ -1,5 +1,5 @@
 from django import forms
-from .models import PaymentCategory,Payment, Income, IncomeCategory, Rest
+from .models import PaymentCategory,Payment, Income, IncomeCategory, Rest,PaymentCardCategory
 from django.utils import timezone
 from .widgets import CustomRadioSelect
 
@@ -160,6 +160,13 @@ class TransitionGraphSearchForm(forms.Form):
         label='支出カテゴリでの絞り込み',
         required=False,
         queryset=PaymentCategory.objects.order_by('name'),
+        widget=CustomRadioSelect,
+    )
+    
+    payment_cardcategory = forms.ModelChoiceField(
+        label='支出カードカテゴリでの絞り込み',
+        required=False,
+        queryset=PaymentCardCategory.objects.order_by('name'),
         widget=CustomRadioSelect,
     )
 
