@@ -19,8 +19,7 @@ class Index(generic.TemplateView):
     
     template_name = 'kakeibo/index.html'
     # model = Budget
-    
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         TODAY = str(timezone.now()).split('-')
@@ -28,31 +27,39 @@ class Index(generic.TemplateView):
         month = TODAY[1]
         next_year, next_month = get_next(year, month)
         prev_year, prev_month = get_prev(year, month)
-        objects = Payment.objects.filter(
-            date__year = year, date__month = month
-        ).order_by("date")
-        total = 0
-        for object in objects:
-            total += object.price
         
-        objects = Payment.objects.filter(
+        # objects = Payment.objects.filter(
+        #     date__year = year, date__month = month
+        # ).order_by("date")
+        # total = 0
+        # for object in objects:
+        #     total += object.price
+        #クレカなので先月の利用額
+        payments_objects = Payment.objects.filter(
             date__year = year, date__month = prev_month
         ).order_by("date")
         total_payment = 0
-        #クレカなので先月の利用額
-        for object in objects:
-            total_payment += object.price
+        ## 
+        for payment_object in payments_objects:
+            total_payment += payment_object.price
         
-        
+        rest_objects = Rest.objects.order_by("date")
+        rest_total = 0
+        for object in rest_objects:
+            rest_total += object.rest
+        usable = rest_total - total_payment
         context = {
             "year": year,
             'month': month,
-            "total":total,
-            "total_payment":total_payment,
+            # "total": total,
+            "payments":payments_objects,
+            "total_payment": total_payment,
+            "rest": rest_total,
             "next_year": next_year,
             "next_month": next_month,
             "prev_year": prev_year,
             "prev_month": prev_month,
+            "usable": usable,
         }
         # if not queryset:
         #     return context
@@ -239,11 +246,11 @@ class PaymentCreate(generic.CreateView):
     # バリデーション時にメッセージを保存
     def form_valid(self, form):
         self.object = payment = form.save()
-        messages.info(self.request,
-                      f'支出を登録しました\n'
-                      f'日付:{payment.date}\n'
-                      f'カテゴリ:{payment.category}\n'
-                      f'金額:{payment.price}円')
+        # messages.info(self.request,
+        #               f'支出を登録しました\n'
+        #               f'日付:{payment.date}\n'
+        #               f'カテゴリ:{payment.category}\n'
+        #               f'金額:{payment.price}円')
         return redirect(self.get_success_url())
 class IncomeCreate(generic.CreateView):
     """収入登録"""
@@ -261,11 +268,11 @@ class IncomeCreate(generic.CreateView):
     
     def form_valid(self, form):
         self.object = income = form.save()
-        messages.info(self.request,
-                      f'収入を登録しました\n'
-                      f'日付:{income.date}\n'
-                      f'カテゴリ:{income.category}\n'
-                      f'金額:{income.price}円')
+        # messages.info(self.request,
+        #               f'収入を登録しました\n'
+        #               f'日付:{income.date}\n'
+        #               f'カテゴリ:{income.category}\n'
+        #               f'金額:{income.price}円')
         return redirect(self.get_success_url())
     
 class RestCreate(generic.CreateView):
@@ -284,11 +291,11 @@ class RestCreate(generic.CreateView):
     
     def form_valid(self, form):
         self.object = rest = form.save()
-        messages.info(self.request,
-                      f'残高を登録しました\n'
-                      f'日付:{rest.date}\n'
-                      f'カテゴリ:{rest.category}\n'
-                      f'金額:{rest.rest}円')
+        # messages.info(self.request,
+        #               f'残高を登録しました\n'
+        #               f'日付:{rest.date}\n'
+        #               f'カテゴリ:{rest.category}\n'
+        #               f'金額:{rest.rest}円')
         return redirect(self.get_success_url())
     
 class PaymentUpdate(generic.UpdateView):
@@ -307,11 +314,11 @@ class PaymentUpdate(generic.UpdateView):
 
     def form_valid(self, form):
         self.object = payment = form.save()
-        messages.info(self.request,
-                      f'支出を更新しました\n'
-                      f'日付:{payment.date}\n'
-                      f'カテゴリ:{payment.category}\n'
-                      f'金額:{payment.price}円')
+        # messages.info(self.request,
+        #               f'支出を更新しました\n'
+        #               f'日付:{payment.date}\n'
+        #               f'カテゴリ:{payment.category}\n'
+        #               f'金額:{payment.price}円')
         return redirect(self.get_success_url())
 
 
@@ -331,11 +338,11 @@ class IncomeUpdate(generic.UpdateView):
 
     def form_valid(self, form):
         self.object = income = form.save()
-        messages.info(self.request,
-                      f'収入を更新しました\n'
-                      f'日付:{income.date}\n'
-                      f'カテゴリ:{income.category}\n'
-                      f'金額:{income.price}円')
+        # messages.info(self.request,
+        #               f'収入を更新しました\n'
+        #               f'日付:{income.date}\n'
+        #               f'カテゴリ:{income.category}\n'
+        #               f'金額:{income.price}円')
         return redirect(self.get_success_url())
     
 class RestUpdate(generic.UpdateView):
@@ -352,14 +359,14 @@ class RestUpdate(generic.UpdateView):
     def get_success_url(self):
         return reverse_lazy('kakeibo:rest_list')
 
-    def form_valid(self, form):
-        self.object = rest = form.save()
-        messages.info(self.request,
-                      f'収入を更新しました\n'
-                      f'日付:{rest.date}\n'
-                      f'カテゴリ:{rest.category}\n'
-                      f'金額:{rest.rest}円')
-        return redirect(self.get_success_url())
+    # def form_valid(self, form):
+    #     self.object = rest = form.save()
+    #     messages.info(self.request,
+    #                   f'収入を更新しました\n'
+    #                   f'日付:{rest.date}\n'
+    #                   f'カテゴリ:{rest.category}\n'
+    #                   f'金額:{rest.rest}円')
+    #     return redirect(self.get_success_url())
 
 
 class PaymentDelete(generic.DeleteView):
@@ -380,11 +387,11 @@ class PaymentDelete(generic.DeleteView):
         self.object = payment = self.get_object()
 
         payment.delete()
-        messages.info(self.request,
-                      f'支出を削除しました\n'
-                      f'日付:{payment.date}\n'
-                      f'カテゴリ:{payment.category}\n'
-                      f'金額:{payment.price}円')
+        # messages.info(self.request,
+        #               f'支出を削除しました\n'
+        #               f'日付:{payment.date}\n'
+        #               f'カテゴリ:{payment.category}\n'
+        #               f'金額:{payment.price}円')
         return redirect(self.get_success_url())
 
 
@@ -405,11 +412,11 @@ class IncomeDelete(generic.DeleteView):
     def delete(self, request, *args, **kwargs):
         self.object = income = self.get_object()
         income.delete()
-        messages.info(self.request,
-                      f'収入を削除しました\n'
-                      f'日付:{income.date}\n'
-                      f'カテゴリ:{income.category}\n'
-                      f'金額:{income.price}円')
+        # messages.info(self.request,
+        #               f'収入を削除しました\n'
+        #               f'日付:{income.date}\n'
+        #               f'カテゴリ:{income.category}\n'
+        #               f'金額:{income.price}円')
         return redirect(self.get_success_url())
     
 class MonthDashboard(generic.TemplateView):
@@ -507,7 +514,7 @@ class TransitionView(generic.TemplateView):
             if payment_category:
                 payment_queryset = payment_queryset.filter(category=payment_category)
             if payment_cardcategory:
-                payment_cardqueryset = payment_queryset.fileter(cardcategory=payment_cardcategory)
+                payment_cardqueryset = payment_queryset.filter(cardcategory=payment_cardcategory)
             income_category = form.cleaned_data.get('income_category')
             if income_category:
                 income_queryset = income_queryset.filter(category=income_category)

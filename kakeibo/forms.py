@@ -83,7 +83,7 @@ class PaymentSearchForm(forms.Form):
     )
     
 class IncomeSearchForm(forms.Form):
-    start_year = 2019
+    start_year = 2020
     end_year = timezone.now().year + 1
     years = [(year, f'{year}年') for year in reversed(range(start_year, end_year + 1))]
     years.insert(0, (0, ''))

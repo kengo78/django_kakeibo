@@ -16,7 +16,7 @@
     <th>日付</th>
     <th>カテゴリ</th>
     <th>金額</th>
-    <th>摘要</th>
+    <th>概要</th>
     <th>編集</th>
   </tr>
   {% for income in income_list %}
@@ -24,6 +24,11 @@
   <tr>
     <td>{{ income.date }}</td>
     <td>{{ income.category }}</td>
+    <td>
+      {% if income.price %}
+      {{ income.price }}
+      {% endif %}
+    </td>
     <td>
       {% if income.description %}
       {{ income.description }}
