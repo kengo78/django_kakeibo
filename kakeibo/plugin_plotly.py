@@ -9,6 +9,8 @@ class GraphGenerator:
     paper_bg_color = 'rgb(255,255,255)'
     month_bar_color = 'indianred'
     font_color = 'dimgray'
+    payment_color = 'tomato'
+    income_color = 'forestgreen'
 
     def transition_plot(self,
                         x_list_payment=None,

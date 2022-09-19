@@ -33,6 +33,7 @@
   <tr>
     <th>日付</th>
     <th>カテゴリ</th>
+    <th>支払い</th>
     <th>金額</th>
     <th>概要</th>
     <th>編集</th> 
@@ -79,6 +80,9 @@
   {% endif %}
 </div>
 
+<div class="" style='margin-top: 10px;'>
+  <a class="btn btn-danger" href="{% url 'kakeibo:payment_create'%}">支出登録</a>
+</div>
 
 {% endblock %}
 

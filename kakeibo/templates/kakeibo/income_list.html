@@ -55,4 +55,32 @@
   {% endif %}
 </div>
 
+<div class="" style='margin-top: 10px;'>
+  <a class="btn btn-danger" href="{% url 'kakeibo:income_create'%}">収入登録</a>
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', e => {
+    const searchForm = document.getElementById('search-form');
+
+    //カテゴリがクリックされたら検索実行
+    for (const check of document.getElementsByName('category')) {
+      check.addEventListener('change', () => {
+        searchForm.submit();
+      });
+    }
+
+    // 選択済みのカテゴリがクリックされたらチェックを解除して検索実行
+    const selectedCategory = document.querySelector(`input[name='category']:checked`)
+    if (selectedCategory) {
+      selectedCategory.onclick = () => {
+        selectedCategory.checked = false
+        searchForm.submit();
+      }
+    }
+  });
+</script>
 {% endblock %}

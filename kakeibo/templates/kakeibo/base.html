@@ -21,6 +21,7 @@
     <div class="pulldownmenu">
       <select name="select" onChange="location.href=value;">
         {% comment %} <option value="#">ページを選択してください</option> {% endcomment %}
+        <option value="{% url 'kakeibo:index' %}">ホーム</option>
         <option value="{% url 'kakeibo:payment_create' %}">支出登録</option>
         <option value="{% url 'kakeibo:income_create' %}">収入登録</option>
         <option value="{% url 'kakeibo:rest_create' %}">残高登録</option>
@@ -40,6 +41,9 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'kakeibo:index' %}">ホーム</a>
+              </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="{% url 'kakeibo:payment_create' %}">支出登録</a>
               </li>
