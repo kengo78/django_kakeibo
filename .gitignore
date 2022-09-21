@@ -1,3 +1,7 @@
 .env
 mysql/*
 data/mysql/ca-key.pem
+data/mysql/ca.pem
+data/mysql/client-cert.pem
+data/mysql/client-key.pem
+data/mysql/*.pem
