@@ -9,6 +9,3 @@ environ==1.0
 django-pandas
 plotly
 django-import-export
-django-pandas
-pandas
-plotly
