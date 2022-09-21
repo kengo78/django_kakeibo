@@ -1,9 +1,11 @@
 version: '3'
 services:
   db:
+    build: ./mysql
     container_name: KakeiboDB
     platform: linux/x86_64 #この行を追加。これないと"ERROR: no matching manifest for linux/arm64/v8 in the manifest list entries"
     image: mysql:5.7
+    # build: ./data/
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     restart: always
     environment:
@@ -17,10 +19,16 @@ services:
       TZ: Asia/Tokyo
       # MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       # MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
-      volumes:
-        — kakeibodb_volume:/var/lib/mysql/data
-        — ./mysql/conf.d:/etc/mysql/conf.d
-        — ./mysql:/initdb.d
+      volumes: 
+          — Kakeibo:/var/lib/mysql/Kakeibo/
+          — ./data:/var/lib/mysql
+          - ./data:/var/lib/docker/volumes/KakeiboDB/_data
+        # - 
+        # — ./data/conf.d:/etc/mysql/conf.d
+        # — ./data:/initdb.d
+        # — ./data:/var/lib/mysql
+        # — djangokakeibo:/var/lib/mysql
+      restart: always
       ports:
         — 3306:3306
     # command: mysql -u $MYSQL_ROOT_USER -p $MYSQL_ROOT_PASSWORD
@@ -39,8 +47,9 @@ services:
   web:
     container_name: "django_kakeibo"
     platform: linux/amd64
-    build: .
-    command: sh -c "python3 manage.py migrate; python3 manage.py runserver 0.0.0.0:8000"
+    build: ./python
+    # command: sh -c "python3 manage.py migrate; python3 manage.py runserver 0.0.0.0:8000"
+    command: python3 manage.py runserver 0.0.0.0:8000
     working_dir: /code
     volumes:
       - .:/code
@@ -51,4 +60,5 @@ services:
     # extra_hosts:                  # 追加
     #   - localhost:172.21.0.3   # 追加
 volumes:
-  kakeibodb_volume:
+  Kakeibo:
+    name: Kakeibo
