@@ -1,0 +1,11 @@
+Django>=2.2.4
+mysqlclient==1.4.6
+psycopg2
+numpy
+pandas
+scipy
+django-environ
+environ==1.0
+django-pandas
+plotly
+django-import-export

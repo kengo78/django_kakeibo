@@ -5,3 +5,5 @@ data/mysql/ca.pem
 data/mysql/client-cert.pem
 data/mysql/client-key.pem
 data/mysql/*.pem
+
+mysql/*.pem

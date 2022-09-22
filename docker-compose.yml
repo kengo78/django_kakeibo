@@ -21,9 +21,8 @@ services:
       # MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
       volumes: 
           — Kakeibo:/var/lib/mysql/Kakeibo/
-          — ./data:/var/lib/mysql
-          - ./data:/var/lib/docker/volumes/KakeiboDB/_data
-        # - 
+          # - ./data:/var/lib/docker/volumes/KakeiboDB/_data
+          # — ./data/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
         # — ./data/conf.d:/etc/mysql/conf.d
         # — ./data:/initdb.d
         # — ./data:/var/lib/mysql
@@ -35,24 +34,14 @@ services:
     # command: mysqld --innodb_use_native_aio=
     expose:
       - "3306"
-  
-  # phpmyadmin:
-  #   image: phpmyadmin/phpmyadmin
-  #   ports:
-  #     - 8080:80
-  #   environment:
-  #     - PMA_HOST=db
-  #     - PMA_USER=root
-  #     - PMA_PASSWORD=password
+
   web:
     container_name: "django_kakeibo"
     platform: linux/amd64
-    build: ./python
-    # command: sh -c "python3 manage.py migrate; python3 manage.py runserver 0.0.0.0:8000"
-    command: python3 manage.py runserver 0.0.0.0:8000
+    build: .
+    command: sh -c "python ./manage.py migrate; python ./manage.py runserver 0.0.0.0:8000"
+    # command: python manage.py runserver 0.0.0.0:8000
     working_dir: /code
-    volumes:
-      - .:/code
     ports:
       - 8000:8000
     depends_on:
@@ -61,4 +50,4 @@ services:
     #   - localhost:172.21.0.3   # 追加
 volumes:
   Kakeibo:
-    name: Kakeibo
+  # staticdata:
