@@ -2,7 +2,7 @@ version: '3'
 services:
   db:
     build: ./mysql
-    container_name: KakeiboDB
+    container_name: Kakeibodb
     platform: linux/x86_64 #この行を追加。これないと"ERROR: no matching manifest for linux/arm64/v8 in the manifest list entries"
     image: mysql:5.7
     # build: ./data/
@@ -20,9 +20,8 @@ services:
       # MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       # MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
       volumes: 
-          — Kakeibo:/var/lib/mysql/Kakeibo/
-          # - ./data:/var/lib/docker/volumes/KakeiboDB/_data
-          # — ./data/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
+          — kakeibodb:/var/lib/mysql
+          — ./data/:/var/lib/mysql
         # — ./data/conf.d:/etc/mysql/conf.d
         # — ./data:/initdb.d
         # — ./data:/var/lib/mysql
@@ -34,13 +33,13 @@ services:
     # command: mysqld --innodb_use_native_aio=
     expose:
       - "3306"
-
+  
   web:
     container_name: "django_kakeibo"
     platform: linux/amd64
     build: .
-    command: sh -c "python ./manage.py migrate; python ./manage.py runserver 0.0.0.0:8000"
-    # command: python manage.py runserver 0.0.0.0:8000
+    command: sh -c "python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
+    # command: python3 manage.py runserver 0.0.0.0:8000
     working_dir: /code
     ports:
       - 8000:8000
@@ -49,5 +48,5 @@ services:
     # extra_hosts:                  # 追加
     #   - localhost:172.21.0.3   # 追加
 volumes:
-  Kakeibo:
-  # staticdata:
+  kakeibodb:
+    driver: local

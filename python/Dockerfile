@@ -11,10 +11,10 @@ RUN mkdir /code
 WORKDIR /code
 
 # カレントディレクトリにある資産をコンテナ上の指定のディレクトリにコピーする
-ADD . /code
+COPY requirements.txt /code
 RUN pip install --upgrade pip
 RUN pip install django
 
 RUN pip install -r requirements.txt
-ADD . /code/
+COPY . /code/
 EXPOSE 8000
