@@ -73,7 +73,7 @@ DATABASES = {
     'NAME': 'Kakeibo',
     'USER': 'root',
     'PASSWORD': 'u585304g',
-    'HOST': 'db',
+    'HOST': 'mysql',
     'POST': '3306',
     'OPTIONS': {
             'charset': 'utf8mb4', #OPTIONSを追加する
